@@ -605,7 +605,7 @@ elif Question == "4.How many comments were made on each video, and what are thei
 elif Question == "5.Which videos have the highest number of likes, and what are their corresponding channel names?":
     if st.button("GET SOLUTION"):
         Answer = '''Select Videos.Channel_Name, Videos.Video_Name, Videos.likes FROM Videos INNER JOIN 
-        Channels on Videos.Channel_Name = Channels.Channel_Name order by likes DESC'''
+        Channels on Videos.Channel_Name = Channels.Channel_Name Where likes is Not NULL order by likes DESC'''
         cursor.execute(Answer)
         Q5 = cursor.fetchall()
         data_frame = pd.DataFrame(Q5,columns=['Channel_Name', 'Video_Name', 'likes'])

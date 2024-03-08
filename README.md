@@ -20,6 +20,7 @@ Install required packages using pip.
 2. pip install pymongo
 3. pip install psycopg2
 4. pip install pandas
+5. pip install python-dotenv
 
 Step 2: Declaration of API Key
 Declare the API key obtained from Google Cloud Platform for accessing the YouTube Data API.

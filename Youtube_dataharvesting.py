@@ -3,14 +3,18 @@ import pymongo
 import psycopg2
 import pandas as pd
 import streamlit as st
+import os
 
 
 api_service_name = "youtube"
 api_version = "v3"
 
-#  Assigning my API_KEY as a Variable
+# Load API_KEY from environment Variable
 
-api_key = 'AIzaSyCD-5rbRHNATyxZ8uINyXAkPyTFVePpz5E'
+api_key = os.environ.get('YouTube_API_KEY')
+
+if api_key is None:
+    raise ValueError("NO API Key found. Please set the YouTube_API_KEY environment variable.")
 
 
 # To Get Channel Details

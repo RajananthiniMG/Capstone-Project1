@@ -13,7 +13,6 @@ api_version = "v3"
 api_key = 'AIzaSyCD-5rbRHNATyxZ8uINyXAkPyTFVePpz5E'
 
 
-
 # To Get Channel Details
 
 # To get channel Id/name as a input we using below function
@@ -502,7 +501,7 @@ def display_videos_tables():
 # To create web application using streamlit 
 
 with st.sidebar:
-     st.title(':gray[YOUTUBE DATA HARVESTING AND WAREHOUSING] :red_envelope:')
+     st.title(':gray[YOUTUBE DATA HARVESTING AND WAREHOUSING] :admission_tickets:')
      st.header('Skill Take Away', divider = 'gray')
      st.subheader(':ballot_box_with_check: API Integration')
      st.subheader(':ballot_box_with_check: Python Scripting')
@@ -511,6 +510,8 @@ with st.sidebar:
      st.subheader(':ballot_box_with_check: Data Management Using MongoDB , Pandas and SQL')
 
 channel_id = st.text_input('Enter the Channel ID') 
+#here to get channel id as input and storing it in MongoDB,Below function is to check whether the channel id already exists or not
+#if exists it won't allow data to insert in Mongo Db or else it will Upload Successfully.
 
 if st.button('Collect and Store data'):
      channel_ids = []
@@ -526,13 +527,14 @@ if st.button('Collect and Store data'):
          insert = channel_details(channel_id) 
          st.success(insert)
 
-if st.button('Migrate Data to SQL'):
+if st.button('Migrate Data to SQL'): #here we migrating the data that we stored in MongoDB to SQL
     tables = Tables()
     st.success(tables)
 
 display_tables = st.radio("SELECT THE TABLE TO VIEW",("CHANNELS","PLAYLIST","COMMENTS","VIDEOS"))
+#This will display the tables we created in SQL with all details
 
-if display_tables == "CHANNELS":
+if display_tables == "CHANNELS": 
     display_channels_tables()
 
 elif display_tables == "PLAYLIST":
@@ -565,9 +567,11 @@ Question = st.selectbox("Select your Question",("1.What are the names of all the
                                                 "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?",
                                                 "10.Which videos have the highest number of comments, and what are their corresponding channel names?"))
 
+# here we writing an SQL Query to answer above all Question.
+# In this we are writing an SQL Query and then converting it to dataframe and using st.write we displaying it in streamlit.
 if Question == "1.What are the names of all the videos and their corresponding channels?" :
     if st.button("GET SOLUTION"):
-        Answer = '''Select Channel_Name, Video_Name, Video_Id from Videos'''
+        Answer = '''SELECT Channel_Name, Video_Name, Video_Id FROM Videos'''
         cursor.execute(Answer)
         Q1 = cursor.fetchall()
         data_frame = pd.DataFrame(Q1,columns=['Channel_Name', 'Video_Name', 'Video_Id'])
@@ -576,7 +580,7 @@ if Question == "1.What are the names of all the videos and their corresponding c
 
 elif Question == "2.Which channels have the most number of videos, and how many videos dothey have?" :
     if st.button("GET SOLUTION"):
-        Answer = '''Select Channel_Name, Total_Videos_ASON from Channels order by Total_Videos_ASON DESC'''
+        Answer = '''SELECT Channel_Name, Total_Videos_ASON FROM Channels ORDER BY Total_Videos_ASON DESC'''
         cursor.execute(Answer)
         Q2 = cursor.fetchall()
         data_frame = pd.DataFrame(Q2,columns=['Channel_Name', 'Total_Videos_ASON'])
@@ -585,8 +589,8 @@ elif Question == "2.Which channels have the most number of videos, and how many 
 
 elif Question == "3.What are the top 10 most viewed videos and their respective channels?" :
     if st.button("GET SOLUTION"):
-        Answer = '''Select Videos.Channel_Name, Videos.Video_Name, Videos.View_count FROM Videos INNER JOIN 
-        Channels on Videos.Channel_Name = Channels.Channel_Name order by View_count DESC LIMIT 10'''
+        Answer = '''SELECT Videos.Channel_Name, Videos.Video_Name, Videos.View_count FROM Videos INNER JOIN 
+        Channels on Videos.Channel_Name = Channels.Channel_Name ORDER BY View_count DESC LIMIT 10'''
         cursor.execute(Answer)
         Q3 = cursor.fetchall()
         data_frame = pd.DataFrame(Q3,columns=['Channel_Name', 'Video_Name', 'View_count'])
@@ -595,7 +599,7 @@ elif Question == "3.What are the top 10 most viewed videos and their respective 
 
 elif Question == "4.How many comments were made on each video, and what are their corresponding video names?":
     if st.button("GET SOLUTION"):
-        Answer = '''Select Channel_Name, Video_Name, Comment_count FROM Videos Where Comment_count is NOT NULL'''
+        Answer = '''SELECT Channel_Name, Video_Name, Comment_count FROM Videos WHERE Comment_count is NOT NULL'''
         cursor.execute(Answer)
         Q4 = cursor.fetchall()
         data_frame = pd.DataFrame(Q4,columns=['Channel_Name', 'Video_Name', 'Comment_count'])
@@ -604,8 +608,8 @@ elif Question == "4.How many comments were made on each video, and what are thei
 
 elif Question == "5.Which videos have the highest number of likes, and what are their corresponding channel names?":
     if st.button("GET SOLUTION"):
-        Answer = '''Select Videos.Channel_Name, Videos.Video_Name, Videos.likes FROM Videos INNER JOIN 
-        Channels on Videos.Channel_Name = Channels.Channel_Name Where likes is Not NULL order by likes DESC'''
+        Answer = '''SELECT Videos.Channel_Name, Videos.Video_Name, Videos.likes FROM Videos INNER JOIN 
+        Channels on Videos.Channel_Name = Channels.Channel_Name Where likes is NOT NULL ORDER BY likes DESC'''
         cursor.execute(Answer)
         Q5 = cursor.fetchall()
         data_frame = pd.DataFrame(Q5,columns=['Channel_Name', 'Video_Name', 'likes'])
@@ -614,7 +618,7 @@ elif Question == "5.Which videos have the highest number of likes, and what are 
 
 elif Question == "6.What is the total number of likes and dislikes for each video, and what are their corresponding video names?":
     if st.button("GET SOLUTION"):
-        Answer = '''Select Channel_Name, Video_Name, likes FROM Videos'''
+        Answer = '''SELECT Channel_Name, Video_Name, likes FROM Videos'''
         cursor.execute(Answer)
         Q6 = cursor.fetchall()
         data_frame = pd.DataFrame(Q6,columns=['Channel_Name', 'Video_Name', 'likes'])
@@ -623,7 +627,7 @@ elif Question == "6.What is the total number of likes and dislikes for each vide
 
 elif Question == "7.What is the total number of views for each channel, and what are their corresponding channel names?":
     if st.button("GET SOLUTION"):
-        Answer = '''Select Channel_Name, Total_ViewCount FROM Channels'''
+        Answer = '''SELECT Channel_Name, Total_ViewCount FROM Channels'''
         cursor.execute(Answer)
         Q7 = cursor.fetchall()
         data_frame = pd.DataFrame(Q7,columns=['Channel_Name', 'Total_Viewcount'])
@@ -632,7 +636,7 @@ elif Question == "7.What is the total number of views for each channel, and what
 
 elif Question == "8.What are the names of all the channels that have published videos in the year 2022?":
     if st.button("GET SOLUTION"):
-        Answer = '''Select Distinct Channel_Name, Video_Name, Published_date FROM Videos Where extract (year from Published_date) = 2022 '''
+        Answer = '''SELECT DISTINCT Channel_Name, Video_Name, Published_date FROM Videos WHERE extract (year from Published_date) = 2022 '''
         cursor.execute(Answer)
         Q8 = cursor.fetchall()
         data_frame = pd.DataFrame(Q8,columns=['Channel_Name', 'Video_Name','Published_date'])
@@ -641,7 +645,7 @@ elif Question == "8.What are the names of all the channels that have published v
 
 elif Question == "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?":
     if st.button("GET SOLUTION"):
-        Answer = '''Select Channel_Name, Video_Name, AVG(Duration_of_video) as Averageduration FROM Videos GROUP BY Channel_Name, Video_Name;'''
+        Answer = '''SELECT Channel_Name, Video_Name, AVG(Duration_of_video) as Averageduration FROM Videos GROUP BY Channel_Name, Video_Name;'''
         cursor.execute(Answer)
         Q9 = cursor.fetchall()
         data_frame = pd.DataFrame(Q9,columns=['Channel_Name', 'Video_Name','Averageduration'])
@@ -650,7 +654,7 @@ elif Question == "9.What is the average duration of all videos in each channel, 
 
 elif Question == "10.Which videos have the highest number of comments, and what are their corresponding channel names?":
     if st.button("GET SOLUTION"):
-        Answer = '''Select Channel_Name, Video_Name, Comment_count FROM Videos Where Comment_count is NOT NULL 
+        Answer = '''SELECT Channel_Name, Video_Name, Comment_count FROM Videos Where Comment_count is NOT NULL 
         order by Comment_count DESC'''
         cursor.execute(Answer)
         Q10 = cursor.fetchall()

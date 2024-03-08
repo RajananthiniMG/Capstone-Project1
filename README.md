@@ -12,33 +12,35 @@ MongoDB
 PostgreSQL
 Google Cloud Platform Account with YouTube Data API enabled
 
-Step1: Installation:
+Step-by-Step Process
 
-we are installed and Imported some pacages that reqiured for this project as the first step of the Project.
-
+Step 1: Installation
+Install required packages using pip.
 1. pip install streamlit
 2. pip install pymongo
 3. pip install psycopg2
 4. pip install pandas
 
-Srep2: Declaration of API Key:
+Step 2: Declaration of API Key
+Declare the API key obtained from Google Cloud Platform for accessing the YouTube Data API.
 
-After installation we are declaring the API key that we are going to use in this project to get data from Youtube. The API key as been enabled from Google Cloud Platform Account
+Step 3: Collecting Data from YouTube
+Write functions to retrieve specific details from YouTube using its API.
 
-api_key = 'AIzaSyCD-5rbRHNATyxZ8uINyXAkPyTFVePpz5E'
+Step 4: Storing Data in MongoDB
+Store the collected data in a MongoDB database for efficient data storage.
 
-Step3: To Collect Data from YouTube:
+Step 5: Creating SQL Tables
+Create tables in a PostgreSQL database to organize and structure the collected data.
 
-In this Step we writing the code to get the specifice detail from YouTube and creating each as a Function to call when we required in next Process,
+Step 6: Display the Tables
+Displaying the Tables we created in SQL using st.dataframe().
 
-def get_channel_info(Channel_ID):
-def get_video_ids(Channel_ID):
-def get_video_details(video_ids):
-def get_Playlist_details(Channel_ID):
-def get_comment_details(video_ids):
+Step 7: Streamlit Code
+In this process, we create an Interactive Web Interface providing a user-friendly experience using Streamlit. It allows users to:
 
-Step4: To Store the above collected data into MongoDB
-
-In this Process we are using cloud MongoDB servet to create an database as YouTube_Data_Harvestin and inserting all the details we collected from youtube by calling the above defined function to the data lake of the the MongoDB as Channel_details.
-
-Step5: To create an Table for each data we collected as Channels Table, Playlist Table, Comment Table and Video Table in SQL
+1. Input Channel ID: Users can input a YouTube channel ID in the provided text input field.
+2. Collect and Store Data: Upon clicking the "Collect and Store data" button, the application checks if the provided channel ID already exists in the MongoDB database. If not, it collects data from YouTube and 3. 3. stores it in MongoDB. If the channel ID already exists, it displays a message indicating that the channel ID already exists.
+4. Migrate Data to SQL: Users can migrate the collected data from MongoDB to a PostgreSQL database by clicking the "Migrate Data to SQL" button.
+5. View Data: Users can select from different tables (channels, playlists, comments, or videos) to view the stored data in the SQL database.
+6. Answer Questions: Users can select predefined questions from a dropdown menu. Upon selecting a question and clicking the "GET SOLUTION" button, the application executes the corresponding SQL query and displays the results.

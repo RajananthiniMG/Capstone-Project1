@@ -1,20 +1,22 @@
 import googleapiclient.discovery 
+import os
 import pymongo
 import psycopg2
 import pandas as pd
 import streamlit as st
-import os
 
 
 api_service_name = "youtube"
 api_version = "v3"
 
 # Load API_KEY from environment Variable
+# Environment variables can be used to store sensitive information, such as passwords, tokens, or API keys, without exposing them in plaintext within the codebase. 
 
 api_key = os.environ.get('YouTube_API_KEY')
 
 if api_key is None:
     raise ValueError("NO API Key found. Please set the YouTube_API_KEY environment variable.")
+
 
 
 # To Get Channel Details
@@ -185,7 +187,7 @@ myclient = pymongo.MongoClient("mongodb+srv://MGRajananthini:BNandy0330@mgrajana
 db = myclient["YouTube_Data_Harvesting"] #creating database in MongoDB
 
 
-def channel_details(Channel_ID): # with this function we storing all data collected from youtube to MOngodb datalake.
+def channel_details(Channel_ID): # with this function we storing all data collected from youtube to Mongodb datalake.
 
   ch_details =  get_channel_info(Channel_ID)
   vd_ids =  get_video_ids(Channel_ID)
@@ -202,7 +204,9 @@ def channel_details(Channel_ID): # with this function we storing all data collec
   return "Upload successfully"
 
 
-def Table_channels(): # creating tables for the collected data in SQL and getting that from MongoDB
+def Tables():# creating tables in SQL and getting the collected data from MongoDB
+
+#Table_Channels()
 
     Data_Base = psycopg2.connect(host = "localhost",
                             user = "postgres",
@@ -259,15 +263,7 @@ def Table_channels(): # creating tables for the collected data in SQL and gettin
         Data_Base.commit()
 
 
-def Table_playlist():
-
-    Data_Base = psycopg2.connect(host = "localhost",
-                            user = "postgres",
-                            password = "BNandy30",
-                            database = "YouTube_DataHarvesting",
-                            port = "5432",)
-
-    cursor = Data_Base.cursor()
+#Table_playlist()
 
     drop_query = '''drop table if exists playlist'''
     cursor.execute(drop_query)
@@ -312,17 +308,8 @@ def Table_playlist():
         cursor.execute(insert_Query,values)
         Data_Base.commit()
 
-
-def Table_Comment():
-
-    Data_Base = psycopg2.connect(host = "localhost",
-                            user = "postgres",
-                            password = "BNandy30",
-                            database = "YouTube_DataHarvesting",
-                            port = "5432",)
-
-    cursor = Data_Base.cursor()
-
+#Table_Comments()
+        
     drop_query = '''drop table if exists Comment'''
     cursor.execute(drop_query)
     Data_Base.commit()
@@ -365,16 +352,7 @@ def Table_Comment():
         cursor.execute(insert_query,values)
         Data_Base.commit()
 
-
-def Table_Videos():
-
-    Data_Base = psycopg2.connect(host = "localhost",
-                            user = "postgres",
-                            password = "BNandy30",
-                            database = "YouTube_DataHarvesting",
-                            port = "5432",)
-
-    cursor = Data_Base.cursor()
+#Table_Videos()
 
     drop_query = '''drop table if exists videos'''
     cursor.execute(drop_query)
@@ -389,7 +367,7 @@ def Table_Videos():
                                                 Favorite_count int,
                                                 Comment_count int,
                                                 Likes bigint,
-                                                Duration_of_video interval,
+                                                Duration_of_video Interval,
                                                 ThumbNail varchar(200),
                                                 Caption_State varchar(10))'''
     cursor.execute(Query)
@@ -421,6 +399,7 @@ def Table_Videos():
                                              Caption_State)
                                             
                                              values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
+        
         values = (row['Channel_Name'],
                   row['Video_Id'],
                   row['Video_Name'],
@@ -436,14 +415,6 @@ def Table_Videos():
         
         cursor.execute(insert_query,values)
         Data_Base.commit()
-
-
-def Tables():
-
-    Table_channels()
-    Table_playlist()
-    Table_Comment()
-    Table_Videos()
     
     return "All Four Tables Created Successfully in SQL"
 
